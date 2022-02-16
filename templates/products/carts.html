@@ -1,0 +1,49 @@
+{% extends "Custlayout.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    {% include '_messages.html' %}
+    <div class="row">
+        <div class="col-md-12">
+        <table class="table table-sm">
+            <thead>
+                <th>Sr</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Update</th>
+                <th>Remove</th>
+            </thead>
+            <tbody>
+            {% for key, service in session['Shoppingcart'].items() %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td><img src="{{url_for('static',filename='Images/'+ service.image)}}" alt="{{service.name}}" width="50" height="45"></td>
+                <td>{{service.name}}</td>
+                <form action="{{url_for('updatecart', code=key)}}" method="post">
+                <td>${{"%.2f"|format(service.price)}}</td>
+                    <td> <input type="number" name="quantity" min="1" max="10" value="{{service.quantity}}"> </td>
+                {% set subtotal = service.quantity|int * service.price|float  %}
+                <td>${{"%.2f"|format(subtotal) }}</td>}</td>
+                <td><button type="submit" class="btn btn-sm btn-info">Update</button> </td>
+                </form>
+                <td><a href="{{url_for('deleteitem', id=key)}}" class="btn btn-sm btn-danger">Remove</a></td>
+            </tr>
+             {% endfor %}
+            </tbody>
+        </table>
+            <table class="table table-sm">
+           <tr>
+               <td> <a href="{{url_for('get_order')}}" class="btn btn-success"> Book now </a> </td>
+               <td width="35%"></td>
+               <td> <h5>Tax: ${{tax}}</h5></td>
+               <td> <h5>Grand total: ${{grandtotal}}</h5> </td>
+                <td> <a href="{{url_for('clearcart')}}" class="btn btn-danger btn-sm float-right mr-4"> Clear cart</a> </td>
+           </tr>
+        </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
